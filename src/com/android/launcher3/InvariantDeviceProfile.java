@@ -291,7 +291,7 @@ public class InvariantDeviceProfile implements OnSharedPreferenceChangeListener 
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences prefs, String Key) {
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         switch (key) {
             case KEY_SHOW_DESKTOP_LABELS:
             case KEY_SHOW_DRAWER_LABELS:
