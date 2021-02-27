@@ -297,6 +297,7 @@ public class InvariantDeviceProfile {
                 SystemUiProxy.INSTANCE.get(mContext).setTaskbarEnabled(enabled);
                 onConfigChanged(mContext, true);
                 break;
+       }
     }
 
     public static String getCurrentGridName(Context context) {
