@@ -168,7 +168,9 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
     /** Note that these will be shown in order from top to bottom, if available for the task. */
     private static final TaskShortcutFactory[] MENU_OPTIONS = new TaskShortcutFactory[]{
             TaskShortcutFactory.APP_INFO,
+            TaskShortcutFactory.KILL_APP,
             TaskShortcutFactory.SPLIT_SCREEN,
+            TaskShortcutFactory.UNINSTALL,
             TaskShortcutFactory.PIN,
             TaskShortcutFactory.INSTALL,
             TaskShortcutFactory.FREE_FORM,
@@ -247,6 +249,11 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
         private void enterSplitSelect() {
             RecentsView overviewPanel = mThumbnailView.getTaskView().getRecentsView();
             overviewPanel.initiateSplitSelect(mThumbnailView.getTaskView());
+        }
+
+        private void clearAllTasks() {
+            final RecentsView recentsView = mThumbnailView.getTaskView().getRecentsView();
+            recentsView.dismissAllTasks();
         }
 
         /**
@@ -343,12 +350,19 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
             }
 
             @SuppressLint("NewApi")
+            @Override
             public void onScreenshot() {
                 endLiveTileMode(() -> saveScreenshot(mTask));
             }
 
+            @Override
             public void onSplit() {
                 endLiveTileMode(TaskOverlay.this::enterSplitSelect);
+            }
+
+            @Override
+            public void onClearAllTasksRequested() {
+                endLiveTileMode(TaskOverlay.this::clearAllTasks);
             }
         }
     }
@@ -363,5 +377,7 @@ public class TaskOverlayFactory implements ResourceBasedOverride {
 
         /** User wants to start split screen with current app. */
         void onSplit();
+
+        void onClearAllTasksRequested();
     }
 }

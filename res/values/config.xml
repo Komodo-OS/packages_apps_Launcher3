@@ -35,7 +35,7 @@
     <string name="popup_container_iterate_children" translatable="false">popup_container_iterate_children</string>
 
     <!-- config used to determine if header protection is supported in AllApps -->
-    <bool name="config_header_protection_supported">false</bool>
+    <bool name="config_header_protection_supported">true</bool>
 
     <!-- Workspace -->
     <!-- The duration (in ms) of the fade animation on the object outlines, used when
@@ -86,7 +86,7 @@
     <item type="id" name="menu_apply_flags" />
 
     <!-- Default packages -->
-    <string name="wallpaper_picker_package" translatable="false"></string>
+    <string name="wallpaper_picker_package" translatable="false">com.android.wallpaper</string>
     <string name="local_colors_extraction_class" translatable="false"></string>
 
     <!-- Accessibility actions -->

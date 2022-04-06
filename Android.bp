@@ -100,6 +100,13 @@ java_library {
     min_sdk_version: min_launcher3_sdk_version,
 }
 
+java_import {
+    name: "libGoogleFeed",
+    jars: [
+        "libs/libGoogleFeed.jar",
+    ],
+}
+
 // Library with all the dependencies for building Launcher3
 android_library {
     name: "Launcher3ResLib",
@@ -117,6 +124,7 @@ android_library {
         "androidx.cardview_cardview",
         "com.google.android.material_material",
         "iconloader_base",
+        "libGoogleFeed",
     ],
     manifest: "AndroidManifest-common.xml",
     sdk_version: "current",
@@ -179,7 +187,10 @@ android_app {
         "Home",
         "Launcher2",
     ],
-    required: ["privapp_whitelist_com.android.launcher3"],
+    required: [
+        "privapp_whitelist_com.android.launcher3",
+        "privapp_whitelist_arrow_launcher3.xml",
+    ],
 
     jacoco: {
         include_filter: ["com.android.launcher3.**"],
@@ -303,4 +314,11 @@ android_library {
     lint: {
         baseline_filename: "lint-baseline-launcher3.xml",
     },
+}
+
+prebuilt_etc {
+    name: "privapp_whitelist_arrow_launcher3.xml",
+    src: "privapp_whitelist_arrow_launcher3.xml",
+    system_ext_specific: true,
+    sub_dir: "permissions",
 }

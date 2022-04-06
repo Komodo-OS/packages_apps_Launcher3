@@ -41,7 +41,10 @@
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <!-- for rotating surface by arbitrary degree -->
     <uses-permission android:name="android.permission.ROTATE_SURFACE_FLINGER" />
-    
+
+    <uses-permission android:name="android.permission.DEVICE_POWER" />
+    <uses-permission android:name="android.permission.FORCE_STOP_PACKAGES" />
+
     <!--
     Permissions required for read/write access to the workspace data. These permission name
     should not conflict with that defined in other apps, as such an app should embed its package
@@ -130,12 +133,13 @@
 
         <!--
         The content provider for exposing various launcher grid options.
-        TODO: Add proper permissions
         -->
         <provider
             android:name="com.android.launcher3.graphics.GridCustomizationsProvider"
             android:authorities="${packageName}.grid_control"
-            android:exported="true" />
+            android:exported="true"
+            android:writePermission="${packageName}.permission.WRITE_SETTINGS"
+            android:readPermission="${packageName}.permission.READ_SETTINGS" />
 
         <!--
         The settings activity. To extend point settings_fragment_name to appropriate fragment class
