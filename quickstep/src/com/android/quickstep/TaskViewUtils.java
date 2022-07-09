@@ -168,8 +168,12 @@ public final class TaskViewUtils {
         boolean isQuickSwitch = v.isEndQuickswitchCuj();
         v.setEndQuickswitchCuj(false);
 
+        if (recentsView == null) {
+            return;
+        }
+
         boolean inLiveTileMode =
-                ENABLE_QUICKSTEP_LIVE_TILE.get() && v.getRecentsView().getRunningTaskIndex() != -1;
+                ENABLE_QUICKSTEP_LIVE_TILE.get() && recentsView.getRunningTaskIndex() != -1;
         final RemoteAnimationTargets targets =
                 new RemoteAnimationTargets(appTargets, wallpaperTargets, nonAppTargets,
                         inLiveTileMode ? MODE_CLOSING : MODE_OPENING);
@@ -286,7 +290,8 @@ public final class TaskViewUtils {
             topMostSimulators = remoteTargetHandles;
         }
 
-        if (!skipViewChanges && parallaxCenterAndAdjacentTask && topMostSimulators.length > 0) {
+        if (!skipViewChanges && parallaxCenterAndAdjacentTask && topMostSimulators != null &&
+                topMostSimulators.length > 0) {
             out.addFloat(v, VIEW_ALPHA, 1, 0, clampToProgress(LINEAR, 0.2f, 0.4f));
 
             RemoteTargetHandle[] simulatorCopies = topMostSimulators;
