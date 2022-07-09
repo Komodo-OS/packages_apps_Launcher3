@@ -37,4 +37,10 @@
     <string name="pref_allow_phone_taskbar">Use taskbar</string>
     <string name="pref_allow_phone_taskbar_desc">For opening and switching apps anywhere</string>
 
+    <!-- Icon size -->
+    <string name="icon_size_title">Icon size</string>
+
+    <!-- Font size -->
+    <string name="font_size_title">Font size</string>
+
 </resources>
