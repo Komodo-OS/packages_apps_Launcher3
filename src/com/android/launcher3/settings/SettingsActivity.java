@@ -64,6 +64,8 @@ import com.android.launcher3.states.RotationHelper;
 import com.android.launcher3.util.DisplayController;
 import com.android.launcher3.util.SettingsCache;
 
+import com.android.quickstep.util.AssistUtils;
+
 /**
  * Settings activity for Launcher. Currently implements the following setting: Allow rotation
  */
@@ -84,6 +86,8 @@ public class SettingsActivity extends FragmentActivity
 
     private static final int DELAY_HIGHLIGHT_DURATION_MILLIS = 600;
     public static final String SAVE_HIGHLIGHTED_KEY = "android:preference_highlighted";
+
+    private static final String CTS_KEY = "pref_allow_cts";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,6 +185,11 @@ public class SettingsActivity extends FragmentActivity
 
         private Preference mShowGoogleAppPref;
         private Preference mShowGoogleBarPref;
+        private Preference mCtsPref;
+
+        private boolean mContextualSearchDefValue;
+        private boolean mCtsEnabled;
+        private AssistUtils mAssistUtils;
 
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -190,6 +199,9 @@ public class SettingsActivity extends FragmentActivity
                 mDeveloperOptionsEnabled = settingsCache.getValue(devUri);
                 settingsCache.register(devUri, this);
             }
+            mContextualSearchDefValue = getContext().getResources().getBoolean(
+                    com.android.internal.R.bool.config_searchAllEntrypointsEnabledDefault);
+            mAssistUtils = AssistUtils.newInstance(getContext());
             super.onCreate(savedInstanceState);
         }
 
@@ -312,6 +324,11 @@ public class SettingsActivity extends FragmentActivity
                 case Utilities.KEY_BLUR_DEPTH:
                     LauncherAppState.getInstance(getContext()).setNeedsRestart();
                     break;
+                case CTS_KEY:
+                    mCtsEnabled = sharedPreferences.getBoolean(CTS_KEY, mContextualSearchDefValue);
+                    Settings.Secure.putInt(getContext().getContentResolver(),
+                            Settings.Secure.SEARCH_ALL_ENTRYPOINTS_ENABLED, mCtsEnabled ? 1 : 0);
+                    break;
                 default:
                     break;
             }
@@ -335,6 +352,11 @@ public class SettingsActivity extends FragmentActivity
                     }
                     // Initialize the UI once
                     preference.setDefaultValue(RotationHelper.getAllowRotationDefaultValue(info));
+                    return true;
+
+                case CTS_KEY:
+                    mCtsPref = preference;
+                    preference.setEnabled(mAssistUtils.isContextualSearchIntentAvailable());
                     return true;
 
                 case DEVELOPER_OPTIONS_KEY:
@@ -372,6 +394,10 @@ public class SettingsActivity extends FragmentActivity
                     getView().postDelayed(highlighter, DELAY_HIGHLIGHT_DURATION_MILLIS);
                     mPreferenceHighlighted = true;
                 }
+            }
+
+            if (mCtsPref != null) {
+                mCtsPref.setEnabled(mAssistUtils.isContextualSearchIntentAvailable());
             }
 
             if (mRestartOnResume) {

@@ -37,6 +37,12 @@
             android:summaryOn="@string/settings_lock_layout_summary_on"
             android:summaryOff="@string/settings_lock_layout_summary_off" />
 
+        <SwitchPreference
+            android:key="pref_allow_cts"
+            android:title="@string/pref_allow_cts_title"
+            android:summary="@string/pref_allow_cts_summary"
+            android:defaultValue="@*android:bool/config_searchAllEntrypointsEnabledDefault" />
+
         <!--
           LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_ENABLED(613)
           LAUNCHER_ADD_NEW_APPS_TO_HOME_SCREEN_DISABLED(614)
