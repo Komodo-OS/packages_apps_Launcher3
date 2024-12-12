@@ -68,8 +68,7 @@ import com.android.launcher3.util.SettingsCache;
  * Settings activity for Launcher. Currently implements the following setting: Allow rotation
  */
 public class SettingsActivity extends FragmentActivity
-        implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback,
-        SharedPreferences.OnSharedPreferenceChangeListener {
+        implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback {
 
     @VisibleForTesting
     static final String DEVELOPER_OPTIONS_KEY = "pref_developer_options";
@@ -122,20 +121,6 @@ public class SettingsActivity extends FragmentActivity
             // Display the fragment as the main content.
             fm.beginTransaction().replace(R.id.content_frame, f).commit();
         }
-
-        LauncherPrefs.getPrefs(this).registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) { 
-        switch (key) {
-            case Utilities.KEY_DOCK_SEARCH:
-            case Utilities.KEY_BLUR_DEPTH:
-                LauncherAppState.getInstance(this).setNeedsRestart();
-                break;
-            default:
-                break;
-        }
     }
 
     private boolean startPreference(String fragment, Bundle args, String key) {
@@ -182,7 +167,7 @@ public class SettingsActivity extends FragmentActivity
      * This fragment shows the launcher preferences.
      */
     public static class LauncherSettingsFragment extends PreferenceFragmentCompat implements
-            SettingsCache.OnChangeListener {
+            SettingsCache.OnChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
         protected boolean mDeveloperOptionsEnabled = false;
 
@@ -306,6 +291,30 @@ public class SettingsActivity extends FragmentActivity
         public void onSaveInstanceState(Bundle outState) {
             super.onSaveInstanceState(outState);
             outState.putBoolean(SAVE_HIGHLIGHTED_KEY, mPreferenceHighlighted);
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+            LauncherPrefs.getPrefs(getContext()).registerOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onStop() {
+            super.onStop();
+            LauncherPrefs.getPrefs(getContext()).unregisterOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            switch (key) {
+                case Utilities.KEY_DOCK_SEARCH:
+                case Utilities.KEY_BLUR_DEPTH:
+                    LauncherAppState.getInstance(getContext()).setNeedsRestart();
+                    break;
+                default:
+                    break;
+            }
         }
 
         /**
